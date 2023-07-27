@@ -34,6 +34,7 @@ module.exports = {
         'no-plusplus': 'off',
         'no-restricted-syntax': 'off',
         'class-methods-use-this': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/lines-between-class-members': 'off',
         '@typescript-eslint/no-var-requires': 'off',

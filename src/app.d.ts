@@ -7,12 +7,12 @@ declare global {
     // interface PageData {}
     // interface Platform {}
   }
-}
 
-declare namespace svelteHTML {
-  interface HTMLAttributes<T> {
-    'on:outclick'?: (e: CustomEvent) => void;
-    'on:insideclick'?: (e: CustomEvent) => void;
+  namespace svelteHTML {
+    interface HTMLAttributes<T> {
+      'on:outclick'?: (e: CustomEvent) => void;
+      'on:insideclick'?: (e: CustomEvent) => void;
+    }
   }
 }
 
