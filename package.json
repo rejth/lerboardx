@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && npm run start",
+    "build": "vite build",
     "preview": "vite preview",
     "start": "vite-node --options.transformMode.ssr='/.*/' src/lib/server/index.ts",
     "test": "pnpm run test:integration && npm run test:unit",
