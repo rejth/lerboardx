@@ -22,8 +22,8 @@ export type ShapeConfig = {
 
 const dimensions: Record<ShapeType, Dimension> = {
   NOTE: { width: 140, height: 140 },
-  AREA: { width: 240, height: 240 },
-  TEXT: { width: 90, height: 30 },
+  AREA: { width: 360, height: 240 },
+  TEXT: { width: 200, height: 43 },
 };
 
 export class CanvasModel {

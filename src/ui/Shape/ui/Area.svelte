@@ -3,7 +3,7 @@
 
 <div class="area">
   <span class="rect" />
-  <span>Text Area</span>
+  <span class="text" contenteditable="true">Text Area</span>
 </div>
 
 <style>
@@ -24,5 +24,12 @@
 
     box-shadow: 5px 5px 15px 0 rgb(0 0 0 / 12%);
     background-color: #ffffff;
+  }
+
+  .text {
+    font-size: 1.63281em;
+    color: rgb(0, 0, 0);
+    outline: none;
+    cursor: pointer;
   }
 </style>

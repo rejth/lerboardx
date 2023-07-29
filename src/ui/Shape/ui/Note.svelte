@@ -3,7 +3,7 @@
 
 <div class="note">
   <span class="square" />
-  <span>Note</span>
+  <span class="text" contenteditable="true">Note</span>
 </div>
 
 <style>
@@ -11,7 +11,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
   }
 
   .square {
@@ -24,5 +23,12 @@
 
     background-color: rgb(251, 252, 134);
     box-shadow: 5px 5px 15px 0 rgb(0 0 0 / 12%);
+  }
+
+  .text {
+    font-size: 1.63281em;
+    color: rgb(0, 0, 0);
+    outline: none;
+    cursor: pointer;
   }
 </style>

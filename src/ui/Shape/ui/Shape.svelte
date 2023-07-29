@@ -76,6 +76,7 @@
     height: 9rem;
     padding: 0.5rem;
 
+    text-align: center;
     user-select: none;
     touch-action: none;
     cursor: move;
