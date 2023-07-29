@@ -8,7 +8,7 @@
   import { Toolbar } from '~/ui/Toolbar';
   import Header from '~/ui/Header.svelte';
 
-  const socket = io('http://localhost:3000');
+  const socket = io();
 
   setContext(CONTEXT_KEY, {
     socket,
