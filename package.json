@@ -6,7 +6,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "vite-node --options.transformMode.ssr='/.*/' src/lib/server/index.ts",
-    "start:test": "node server.js",
+    "start:test": "node ./src/lib/server/index.js",
     "test": "pnpm run test:integration && npm run test:unit",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
