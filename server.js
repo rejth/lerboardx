@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
 
+import { injectSocketIO } from './src/lib/server/injectSocketIO.js';
 import { handler } from './build/handler.js';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -10,30 +10,7 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 const server = createServer(app);
 
-app.use(cors());
-
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-});
-
-io.on('connection', (socket) => {
-  console.log(`socket ${socket.id} connected! Hello, World 👋`);
-
-  socket.on('order:add', (payload) => {
-    socket.broadcast.emit('order:add', payload);
-  });
-
-  socket.on('order:delete', (payload) => {
-    socket.broadcast.emit('order:delete', payload);
-  });
-
-  socket.on('order:change', (payload) => {
-    socket.broadcast.emit('order:change', payload);
-  });
-});
+injectSocketIO(server);
 
 app.get('/ping', (_req, res) => {
   return res.send({ message: 'pong 🏓' });
@@ -43,7 +20,8 @@ app.get('/ping', (_req, res) => {
 // https://kit.svelte.dev/docs/adapter-node#custom-server
 // https://github.com/sveltejs/kit/tree/master/packages/adapter-node#custom-server
 app.use(handler);
+app.use(cors());
 
 server.listen(port, () => {
-  console.log(`Running on port ${port}`);
+  console.log(`[ ready ]: Server is running on port ${port}`);
 });
