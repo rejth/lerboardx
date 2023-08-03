@@ -5,13 +5,13 @@
 
 <header>
   <div class="corner">
-    <a href="https://kit.svelte.dev">
+    <a href="/">
       <img src={logo} alt="SvelteKit" />
     </a>
   </div>
 
   <div class="corner">
-    <a href="https://github.com/sveltejs/kit">
+    <a href="https://github.com/rejth/lerboardx">
       <img src={github} alt="GitHub" />
     </a>
   </div>

@@ -13,7 +13,7 @@
   import penIcon from '$lib/images/pen.svg';
   import trashIcon from '$lib/images/trash.svg';
 
-  import Icon from '~/ui/Icon.svelte';
+  import Icon from '$lib/ui/Icon.svelte';
   import { toolbarModel, Tools, type Tool } from '.';
 
   const { canvasStore } = getContext<Context>(CONTEXT_KEY);

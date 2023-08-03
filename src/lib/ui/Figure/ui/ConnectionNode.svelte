@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Connections, type ConnectionNode } from '~/ui/Drawing';
+  import { Connections, type ConnectionNode } from '$lib/ui/Drawing';
 
   export let node: ConnectionNode;
   let nodeRef: HTMLDivElement;

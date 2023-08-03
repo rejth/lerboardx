@@ -3,8 +3,8 @@ import { v4 } from 'uuid';
 
 import { GeometryManager, type Point } from '$lib/services';
 
-import { toolbarModel, type DrawingTool, Tools } from '../Toolbar';
-import type { ShapeConfig } from '../Canvas';
+import { toolbarModel, type DrawingTool, Tools } from '$lib/ui/Toolbar';
+import type { ShapeConfig } from '$lib/ui/Canvas';
 
 export type FigureConfig = {
   uuid: string;

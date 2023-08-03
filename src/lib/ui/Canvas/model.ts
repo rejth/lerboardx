@@ -4,7 +4,13 @@ import { v4 as uuid } from 'uuid';
 import type { Context } from '$lib/types';
 import { GeometryManager, type Dimension, type Point, type RectPosition } from '$lib/services';
 
-import { type ShapeType, type Tool, toolbarModel, Tools, isDrawingToolSelected } from '../Toolbar';
+import {
+  type ShapeType,
+  type Tool,
+  toolbarModel,
+  Tools,
+  isDrawingToolSelected,
+} from '$lib/ui/Toolbar';
 
 export type ShapeConfig = {
   uuid: string;

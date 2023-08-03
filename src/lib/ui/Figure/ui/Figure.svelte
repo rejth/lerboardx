@@ -2,8 +2,7 @@
   import type { ComponentType } from 'svelte';
 
   import type { Point } from '$lib/services';
-
-  import { Tools, type DrawingTool } from '~/ui/Toolbar';
+  import { Tools, type DrawingTool } from '$lib/ui/Toolbar';
   import { Line, Pen, Rect } from '.';
 
   export let path: Point[];

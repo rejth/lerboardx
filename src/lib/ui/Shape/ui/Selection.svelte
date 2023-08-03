@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  import { resizeWatcher } from '$lib/helpers';
+  import { resizeWatcher } from '$lib/utils';
   import type { ShapeModel } from '../model';
 
   export let model: ShapeModel;

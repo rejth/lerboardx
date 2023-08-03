@@ -1,67 +1,73 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
-  import { io } from 'socket.io-client';
+  import { v4 as uuid } from 'uuid';
 
-  import { CONTEXT_KEY } from '$lib/constants';
+  import { goto } from '$app/navigation';
 
-  import { Canvas, CanvasModel } from '~/ui/Canvas';
-  import { Toolbar } from '~/ui/Toolbar';
-  import Header from '~/ui/Header.svelte';
+  import Button from '$lib/ui/Button.svelte';
+  import Input from '$lib/ui/Input.svelte';
+  import Divider from '$lib/ui/Divider.svelte';
 
-  const socket = io();
+  const onCreateRoom = () => {
+    goto(uuid());
+  };
 
-  setContext(CONTEXT_KEY, {
-    socket,
-    canvasStore: new CanvasModel(socket),
-  });
+  const onJoinRoom = () => {};
 </script>
 
 <svelte:head>
-  <title>Board</title>
-  <meta name="description" content="Board" />
+  <title>Home</title>
+  <meta name="description" content="Home" />
 </svelte:head>
 
-<div class="board" role="button" tabindex="0">
-  <Header />
-  <div class="content-wrapper">
-    <div class="scroll-wrapper">
-      <Canvas />
-    </div>
-    <div class="tools-wrapper">
-      <Toolbar />
-    </div>
+<section class="home">
+  <h1 class="title">Lerboardx</h1>
+  <h3 class="subtitle">Collaborative whiteboard</h3>
+
+  <form class="form">
+    <Input label="Enter your name" placeholder="username" />
+    <Input label="Enter room id" placeholder="room id" />
+    <Button name="Join" onClick={onJoinRoom} />
+  </form>
+
+  <Divider />
+
+  <div class="create-room">
+    <strong>Create new room</strong>
+    <Button name="Create" onClick={onCreateRoom} />
   </div>
-</div>
+</section>
 
 <style>
-  .board {
+  .home {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: calc(100vh - 2em);
-    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-main-white);
   }
 
-  .content-wrapper {
-    position: relative;
-    flex-grow: 1;
-    height: 80%;
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
   }
 
-  .scroll-wrapper {
-    height: 100%;
-    overflow: auto;
-    background-color: #f4f4f6;
+  .create-room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .tools-wrapper {
-    position: absolute;
-    top: 0;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 400000010;
-    pointer-events: none;
+  .title {
+    font-weight: 800;
+    font-size: 6rem;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    font-weight: 500;
   }
 </style>

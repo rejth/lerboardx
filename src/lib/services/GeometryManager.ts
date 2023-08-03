@@ -1,7 +1,7 @@
 import { Bezier } from 'bezier-js';
 
-import { Tools } from '../../ui/Toolbar';
-import type { FigureConfig } from '../../ui/Drawing';
+import { Tools } from '$lib/ui/Toolbar';
+import type { FigureConfig } from '$lib/ui/Drawing';
 
 export type Point = Pick<DOMRect, 'x' | 'y'>;
 export type Dimension = Pick<DOMRect, 'width' | 'height'>;

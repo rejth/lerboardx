@@ -18,7 +18,6 @@ const config = {
     alias: {
       // this will match a directory and its contents
       // (`my-directory/x` resolves to `path/to/my-directory/x`)
-      '~/ui': './src/ui',
     },
   },
 };

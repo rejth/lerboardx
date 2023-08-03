@@ -1,7 +1,7 @@
 import { type Writable, writable, get } from 'svelte/store';
 
 import { GeometryManager } from '$lib/services';
-import type { FigureConfig } from '../Drawing';
+import type { FigureConfig } from '$lib/ui/Drawing';
 
 export class FigureModel {
   figure: Writable<FigureConfig> = writable();

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Figure, ConnectionNode } from '~/ui/Figure';
+  import { Figure, ConnectionNode } from '$lib/ui/Figure';
   import { drawingModel } from './model';
 
   const { figures, connections, mouse } = drawingModel;

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { type ComponentType, onMount, getContext } from 'svelte';
 
-  import { dndWatcher } from '$lib/helpers';
+  import { dndWatcher } from '$lib/utils';
   import type { Context } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import { Drawing } from '~/ui/Drawing';
-  import { Tools, type ShapeType, toolbarModel, isDrawingToolSelected } from '~/ui/Toolbar';
-  import { Shape, Note, Text, Area, RectangularDragSelection } from '~/ui/Shape';
+  import { Drawing } from '$lib/ui/Drawing';
+  import { Tools, type ShapeType, toolbarModel, isDrawingToolSelected } from '$lib/ui/Toolbar';
+  import { Shape, Note, Text, Area, RectangularDragSelection } from '$lib/ui/Shape';
 
   const { canvasStore } = getContext<Context>(CONTEXT_KEY);
   const { shapes, mousePosition, selection } = canvasStore;
