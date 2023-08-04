@@ -11,53 +11,88 @@ export function injectSocketIO(server) {
   io.on('connection', (socket) => {
     console.log(`Hello, World 👋! Socket ${socket.id} connected!`);
 
-    socket.on('order:join-room', (roomId, username) => {
-      const room = rooms.get(roomId);
-      if (!room) {
-        rooms.set(roomId, { board: null, users: new Map([[socket.id, username]]) });
-      } else {
-        room.users.set(socket.id, username);
-      }
+    const getRoomId = () => {
+      const joinedRoom = [...socket.rooms].find((room) => room !== socket.id);
+      if (!joinedRoom) return socket.id;
+      return joinedRoom;
+    };
 
-      socket.join(roomId);
-      io.to(roomId).emit('user-joined', socket.id);
-    });
-
-    socket.on('order:delete-room', (roomId) => {
-      rooms.delete(roomId);
-      io.sockets.in(roomId).leave(roomId);
-    });
-
-    socket.on('order:leave-room', (roomId) => {
+    const leaveRoom = (roomId, socketId) => {
       const room = rooms.get(roomId);
       if (!room) return;
 
-      room.users.delete(socket.id);
-
+      room.users.delete(socketId);
       socket.leave(roomId);
+    };
+
+    // Join a room
+    socket.on('order:join-room', (roomId, username = 'Anonymous') => {
+      const room = rooms.get(roomId);
+
+      if (!room) {
+        rooms.set(roomId, { board: new Map(), users: new Map([[socket.id, username]]) });
+        socket.emit('board', []);
+      } else {
+        room.users.set(socket.id, username);
+        socket.emit('board', Array.from(room.board));
+      }
+
+      socket.join(roomId);
+      socket.broadcast.to(roomId).emit('user-joined', socket.id);
+    });
+
+    // Leave a room
+    socket.on('order:leave-room', () => {
+      const roomId = getRoomId();
+
+      leaveRoom(roomId, socket.id);
       io.to(roomId).emit('user-disconnected', socket.id);
     });
 
-    socket.on('order:add', (payload) => {
-      socket.broadcast.emit('order:add', payload);
+    // Create a new shape/figure
+    socket.on('order:add', (shape) => {
+      const roomId = getRoomId();
+      const room = rooms.get(roomId);
+
+      room.board.set(shape.uuid, shape);
+      socket.broadcast.to(roomId).emit('order:add', shape);
     });
 
-    socket.on('order:delete', (payload) => {
-      socket.broadcast.emit('order:delete', payload);
+    // Delete a shape/figure
+    socket.on('order:delete', (shapesLeft) => {
+      const roomId = getRoomId();
+      const room = rooms.get(roomId);
+
+      rooms.set(roomId, { ...room, board: new Map(shapesLeft) });
+      socket.broadcast.to(roomId).emit('order:delete', shapesLeft);
     });
 
-    socket.on('order:change', (payload) => {
-      socket.broadcast.emit('order:change', payload);
+    // Change a shape/figure position, size, color, text, etc.
+    socket.on('order:change', (shape) => {
+      const roomId = getRoomId();
+      const room = rooms.get(roomId);
+
+      room.board.set(shape.uuid, shape);
+      socket.broadcast.to(roomId).emit('order:change', shape);
+    });
+
+    // Undo action
+    socket.on('order:undo', () => {
+      const roomId = getRoomId();
+      socket.broadcast.to(roomId).emit('user-undo', socket.id);
+    });
+
+    // Redo action
+    socket.on('order:redo', () => {
+      const roomId = getRoomId();
+      socket.broadcast.to(roomId).emit('user-redo', socket.id);
     });
 
     socket.on('disconnecting', () => {
-      // Rooms are left automatically upon disconnection.
-      // We just need to notify other members about leaving the room
-      for (const room of socket.rooms) {
-        if (room !== socket.id) {
-          io.to(room).emit('user-disconnected', socket.id);
-        }
-      }
+      const roomId = getRoomId();
+
+      leaveRoom(roomId, socket.id);
+      io.to(roomId).emit('user-disconnected', socket.id);
     });
   });
 }

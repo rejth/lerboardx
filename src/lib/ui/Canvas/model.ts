@@ -91,6 +91,10 @@ export class CanvasModel {
     return new Map([...store.entries()].filter(([key]) => !selected.has(key)));
   }
 
+  setCanvas(shapes: Map<string, ShapeConfig>): void {
+    this.shapes.set(shapes);
+  }
+
   dragCanvas(e: MouseEvent, rect: DOMRect): void {
     if (isDrawingToolSelected(this.tool) || this.tool === Tools.SELECT) return;
 

@@ -4,16 +4,20 @@
   import type { Context } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import { Canvas } from '$lib/ui/Canvas';
+  import { Canvas, type ShapeConfig } from '$lib/ui/Canvas';
   import { Toolbar } from '$lib/ui/Toolbar';
 
   type PageLoadData = { roomId: string };
   export let data: PageLoadData;
 
-  const { socket } = getContext<Context>(CONTEXT_KEY);
+  const { socket, canvasStore } = getContext<Context>(CONTEXT_KEY);
 
   onMount(() => {
-    socket.emit('order:join-room', data.roomId, 'user1');
+    socket.emit('order:join-room', data.roomId);
+  });
+
+  socket.on('board', (board: Array<[string, ShapeConfig]>) => {
+    canvasStore.setCanvas(new Map(board));
   });
 </script>
 
