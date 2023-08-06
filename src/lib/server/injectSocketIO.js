@@ -31,7 +31,6 @@ export function injectSocketIO(server) {
 
       if (!room) {
         rooms.set(roomId, { board: new Map(), users: new Map([[socket.id, username]]) });
-        socket.emit('board', []);
       } else {
         room.users.set(socket.id, username);
         socket.emit('board', Array.from(room.board));

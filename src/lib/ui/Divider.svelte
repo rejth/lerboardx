@@ -1,9 +1,12 @@
 <script lang="ts">
+  export let text: string;
 </script>
 
 <div class="divider-wrapper">
   <div class="line" />
-  <p class="text">or</p>
+  {#if text}
+    <p class="text">{text}</p>
+  {/if}
   <div class="line" />
 </div>
 

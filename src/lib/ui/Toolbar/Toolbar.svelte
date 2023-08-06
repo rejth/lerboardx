@@ -106,6 +106,7 @@
     align-items: center;
     justify-content: center;
 
+    margin: 1rem;
     padding: 0.5em 0.4em 0.2em;
     box-shadow: 0 2px 6px 0 #00263a0f;
     background-color: #ffffff;

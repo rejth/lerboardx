@@ -1,4 +1,6 @@
 <script>
+  import '../app.postcss';
+
   import { setContext } from 'svelte';
   import { io } from 'socket.io-client';
 
@@ -10,7 +12,10 @@
 
   const socket = io();
 
-  setContext(CONTEXT_KEY, { socket, canvasStore: new CanvasModel(socket) });
+  setContext(CONTEXT_KEY, {
+    socket,
+    canvasStore: new CanvasModel(socket),
+  });
 </script>
 
 <div class="app">

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, getContext } from 'svelte';
+  import { onMount, getContext, onDestroy } from 'svelte';
 
   import type { Context } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
@@ -12,12 +12,16 @@
 
   const { socket, canvasStore } = getContext<Context>(CONTEXT_KEY);
 
-  onMount(() => {
-    socket.emit('order:join-room', data.roomId);
+  onDestroy(() => {
+    canvasStore.setCanvas(new Map());
   });
 
-  socket.on('board', (board: Array<[string, ShapeConfig]>) => {
-    canvasStore.setCanvas(new Map(board));
+  onMount(() => {
+    socket.emit('order:join-room', data.roomId);
+
+    socket.on('board', (board: Array<[string, ShapeConfig]>) => {
+      canvasStore.setCanvas(new Map(board));
+    });
   });
 </script>
 

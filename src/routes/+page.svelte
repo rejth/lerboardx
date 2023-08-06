@@ -1,17 +1,21 @@
 <script lang="ts">
   import { v4 as uuid } from 'uuid';
+  import { Button, Label, Input, Tooltip } from 'flowbite-svelte';
 
   import { goto } from '$app/navigation';
-
-  import Button from '$lib/ui/Button.svelte';
-  import Input from '$lib/ui/Input.svelte';
   import Divider from '$lib/ui/Divider.svelte';
 
-  const onCreateRoom = () => {
+  let username = '';
+  let roomId = '';
+  let roomName = '';
+
+  const openNewBoard = () => {
     goto(uuid());
   };
 
-  const onJoinRoom = () => {};
+  const joinRoom = () => {
+    goto(roomId);
+  };
 </script>
 
 <svelte:head>
@@ -23,17 +27,43 @@
   <h1 class="title">Lerboardx</h1>
   <h3 class="subtitle">Collaborative whiteboard</h3>
 
-  <form class="form">
-    <Input label="Enter your name" placeholder="username" />
-    <Input label="Enter room id" placeholder="room id" />
-    <Button name="Join" onClick={onJoinRoom} />
-  </form>
+  <div class="user-name">
+    <div class="mt-10 mb-2">
+      <Label for="user-name" class="block mb-2">
+        <strong>Enter your name</strong>
+      </Label>
+      <Input id="user-name" placeholder="user name" bind:value={username} />
+    </div>
+  </div>
 
-  <Divider />
+  <Divider text="" />
+
+  <div class="join-room">
+    <div class="mb-2">
+      <Label for="room-id" class="block mb-2">
+        <strong>Enter room id</strong>
+      </Label>
+      <Input id="room-id" placeholder="room id" bind:value={roomId} />
+    </div>
+    <Button size="sm" disabled={!roomId} on:click={joinRoom}>Join</Button>
+    {#if !roomId}
+      <Tooltip>Fill the room id</Tooltip>
+    {/if}
+  </div>
+
+  <Divider text="or" />
 
   <div class="create-room">
-    <strong>Create new room</strong>
-    <Button name="Create" onClick={onCreateRoom} />
+    <div class="mb-2">
+      <Label for="room-name" class="block mb-2">
+        <strong>Enter room name</strong>
+      </Label>
+      <Input id="room-name" placeholder="room name" bind:value={roomName} />
+    </div>
+    <Button size="sm" disabled={!roomName} on:click={openNewBoard}>Create</Button>
+    {#if !roomName}
+      <Tooltip>Fill the room name</Tooltip>
+    {/if}
   </div>
 </section>
 
@@ -46,7 +76,7 @@
     background-color: var(--color-main-white);
   }
 
-  .form {
+  .join-room {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,7 +97,7 @@
   }
 
   .subtitle {
-    font-size: 1.5rem;
     font-weight: 500;
+    font-size: 1.5rem;
   }
 </style>
