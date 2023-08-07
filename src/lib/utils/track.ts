@@ -1,5 +1,5 @@
 import { on, once, type Target } from './listeners';
-import { filter, any, every, sequence, watch } from './utils';
+import { filter, any, every, sequence, watch } from './generators';
 
 const allEvents = () => true;
 

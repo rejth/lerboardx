@@ -1,17 +1,16 @@
 import { get, writable, type Writable } from 'svelte/store';
 import { v4 } from 'uuid';
 
-import { GeometryManager, type Point } from '$lib/services';
+import {
+  Tools,
+  type DrawingTool,
+  type Point,
+  type ShapeConfig,
+  type FigureConfig,
+} from '$lib/types';
+import { GeometryManager } from '$lib/services';
 
-import { toolbarModel, type DrawingTool, Tools } from '$lib/ui/Toolbar';
-import type { ShapeConfig } from '$lib/ui/Canvas';
-
-export type FigureConfig = {
-  uuid: string;
-  type: DrawingTool | null;
-  path: Point[];
-  svgPath?: string;
-};
+import { toolbarModel } from '$lib/ui/Toolbar';
 
 export type Mouse = {
   type: DrawingTool | null;

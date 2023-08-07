@@ -1,5 +1,5 @@
 import { on, once } from './listeners';
-import { filter, any, every, sequence, watch, onlyEvent } from './utils';
+import { filter, any, every, sequence, watch, onlyEvent } from './generators';
 
 export function resizeWatcher<T>(target: HTMLElement): AsyncGenerator<T> {
   return watch(() =>

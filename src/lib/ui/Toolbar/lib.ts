@@ -1,4 +1,4 @@
-import type { Tool } from './model';
+import type { Tool } from '$lib/types';
 
 export function isShapeToolSelected(tool: Tool): boolean {
   return ['NOTE', 'TEXT', 'AREA'].includes(tool);

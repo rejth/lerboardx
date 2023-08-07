@@ -1,36 +1,18 @@
 import { get, type Writable, writable } from 'svelte/store';
 import { v4 as uuid } from 'uuid';
 
-import type { Context } from '$lib/types';
-import { GeometryManager, type Dimension, type Point, type RectPosition } from '$lib/services';
-
 import {
+  Tools,
+  type Context,
+  type Point,
+  type ShapeConfig,
   type ShapeType,
   type Tool,
-  toolbarModel,
-  Tools,
-  isDrawingToolSelected,
-} from '$lib/ui/Toolbar';
+} from '$lib/types';
+import { dimensions } from '$lib/constants';
+import { GeometryManager } from '$lib/services';
 
-export type ShapeConfig = {
-  uuid: string;
-  type: ShapeType;
-  rect: RectPosition;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  selected: boolean;
-  styles: string;
-  color?: string;
-  text?: string;
-};
-
-const dimensions: Record<ShapeType, Dimension> = {
-  NOTE: { width: 140, height: 140 },
-  AREA: { width: 360, height: 240 },
-  TEXT: { width: 200, height: 43 },
-};
+import { toolbarModel, isDrawingToolSelected } from '$lib/ui/Toolbar';
 
 export class CanvasModel {
   shapes: Writable<Map<string, ShapeConfig>> = writable(new Map());

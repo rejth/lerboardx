@@ -3,11 +3,15 @@
   import { Button, Label, Input, Tooltip } from 'flowbite-svelte';
 
   import { goto } from '$app/navigation';
+
+  import { validateUuid } from '$lib/utils';
   import Divider from '$lib/ui/Divider.svelte';
 
   let username = '';
   let roomId = '';
   let roomName = '';
+
+  $: roomIdIsValid = validateUuid(roomId);
 
   const openNewBoard = () => {
     goto(uuid());
@@ -38,33 +42,30 @@
 
   <Divider text="" />
 
-  <div class="join-room">
+  <form class="join-room" on:submit|preventDefault={joinRoom}>
     <div class="mb-2">
       <Label for="room-id" class="block mb-2">
         <strong>Enter room id</strong>
       </Label>
-      <Input id="room-id" placeholder="room id" bind:value={roomId} />
+      <Input id="room-id" placeholder="room id" bind:value={roomId} required />
     </div>
-    <Button size="sm" disabled={!roomId} on:click={joinRoom}>Join</Button>
-    {#if !roomId}
-      <Tooltip>Fill the room id</Tooltip>
+    <Button type="submit" size="md" disabled={roomId && !roomIdIsValid}>Join</Button>
+    {#if roomId && !roomIdIsValid}
+      <Tooltip>Incorrect room id</Tooltip>
     {/if}
-  </div>
+  </form>
 
   <Divider text="or" />
 
-  <div class="create-room">
+  <form class="create-room" on:submit|preventDefault={openNewBoard}>
     <div class="mb-2">
       <Label for="room-name" class="block mb-2">
         <strong>Enter room name</strong>
       </Label>
-      <Input id="room-name" placeholder="room name" bind:value={roomName} />
+      <Input id="room-name" placeholder="room name" bind:value={roomName} required />
     </div>
-    <Button size="sm" disabled={!roomName} on:click={openNewBoard}>Create</Button>
-    {#if !roomName}
-      <Tooltip>Fill the room name</Tooltip>
-    {/if}
-  </div>
+    <Button type="submit" size="md">Create</Button>
+  </form>
 </section>
 
 <style>

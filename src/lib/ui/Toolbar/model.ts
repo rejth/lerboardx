@@ -1,21 +1,7 @@
 import { type Writable, writable } from 'svelte/store';
-import { isDrawingToolSelected, isShapeToolSelected } from './lib';
 
-export type Tool = keyof typeof Tools;
-export type ShapeType = 'NOTE' | 'TEXT' | 'AREA';
-export type DrawingTool = 'RECT' | 'CONNECT' | 'PEN';
-export type ServiceTool = 'PAN' | 'DELETE';
-export enum Tools {
-  NOTE = 'NOTE',
-  TEXT = 'TEXT',
-  AREA = 'AREA',
-  PEN = 'PEN',
-  SELECT = 'SELECT',
-  CONNECT = 'CONNECT',
-  RECT = 'RECT',
-  PAN = 'PAN',
-  DELETE = 'DELETE',
-}
+import type { DrawingTool, ShapeType, Tool } from '$lib/types';
+import { isDrawingToolSelected, isShapeToolSelected } from './lib';
 
 class ToolbarModel {
   tool: Writable<Tool> = writable('PAN');

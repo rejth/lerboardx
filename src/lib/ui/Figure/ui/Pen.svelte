@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Point } from '$lib/services';
+  import type { Point } from '$lib/types';
 
   export let path: Point[];
 

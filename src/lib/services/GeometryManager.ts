@@ -1,12 +1,13 @@
 import { Bezier } from 'bezier-js';
 
-import { Tools } from '$lib/ui/Toolbar';
-import type { FigureConfig } from '$lib/ui/Drawing';
-
-export type Point = Pick<DOMRect, 'x' | 'y'>;
-export type Dimension = Pick<DOMRect, 'width' | 'height'>;
-export type RectPosition = Pick<DOMRect, 'top' | 'bottom' | 'left' | 'right'>;
-export type RectDimension = Point & Dimension;
+import {
+  Tools,
+  type Dimension,
+  type Point,
+  type RectDimension,
+  type RectPosition,
+  type FigureConfig,
+} from '$lib/types';
 
 export class GeometryManager {
   #ROUND = 2;

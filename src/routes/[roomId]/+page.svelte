@@ -1,16 +1,22 @@
 <script lang="ts">
-  import { onMount, getContext, onDestroy } from 'svelte';
+  import { onMount, setContext, onDestroy } from 'svelte';
+  import { io } from 'socket.io-client';
 
-  import type { Context } from '$lib/types';
+  import type { RoomLoadData, ShapeConfig } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import { Canvas, type ShapeConfig } from '$lib/ui/Canvas';
   import { Toolbar } from '$lib/ui/Toolbar';
+  import { Canvas, CanvasModel } from '$lib/ui/Canvas';
 
-  type PageLoadData = { roomId: string };
-  export let data: PageLoadData;
+  export let data: RoomLoadData;
 
-  const { socket, canvasStore } = getContext<Context>(CONTEXT_KEY);
+  const socket = io();
+  const canvasStore = new CanvasModel(socket);
+
+  setContext(CONTEXT_KEY, {
+    socket,
+    canvasStore,
+  });
 
   onDestroy(() => {
     canvasStore.setCanvas(new Map());

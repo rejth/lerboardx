@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { GeometryManager, type Point } from '$lib/services';
+  import type { Point } from '$lib/types';
+  import { GeometryManager } from '$lib/services';
 
   export let path: Point[];
   const geometryManager = new GeometryManager();

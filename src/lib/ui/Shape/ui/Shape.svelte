@@ -1,11 +1,9 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte';
 
-  import type { Context } from '$lib/types';
+  import type { Context, ShapeConfig } from '$lib/types';
   import { clickOutside, dndWatcher } from '$lib/utils';
   import { CONTEXT_KEY } from '$lib/constants';
-
-  import type { ShapeConfig } from '$lib/ui/Canvas';
 
   import { Selection } from './';
   import { ShapeModel } from '../model';

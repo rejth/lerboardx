@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-  import type { Context } from '$lib/types';
+  import { Tools, type Context, type Tool } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
   import noteIcon from '$lib/images/note.svg';
@@ -14,7 +14,7 @@
   import trashIcon from '$lib/images/trash.svg';
 
   import Icon from '$lib/ui/Icon.svelte';
-  import { toolbarModel, Tools, type Tool } from '.';
+  import { toolbarModel } from '.';
 
   const { canvasStore } = getContext<Context>(CONTEXT_KEY);
   const { selectedShapes } = canvasStore;
