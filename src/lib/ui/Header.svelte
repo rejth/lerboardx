@@ -1,5 +1,5 @@
 <script>
-  import logo from '$lib/images/svelte-logo.svg';
+  import logo from '$lib/images/logo.svg';
   import github from '$lib/images/github.svg';
 </script>
 
@@ -11,7 +11,7 @@
   </div>
 
   <div class="corner">
-    <a href="https://github.com/rejth/lerboardx">
+    <a href="https://github.com/rejth/lerboardx" target="_blank" rel="noopener noreferrer">
       <img src={github} alt="GitHub" />
     </a>
   </div>

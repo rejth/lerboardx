@@ -4,16 +4,15 @@
   import { Tools, type Context, type Tool } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import noteIcon from '$lib/images/note.svg';
-  import textIcon from '$lib/images/text.svg';
-  import areaIcon from '$lib/images/area.svg';
-  import panIcon from '$lib/images/pan.svg';
-  import selectIcon from '$lib/images/select.svg';
-  import connectIcon from '$lib/images/connect.svg';
-  import penIcon from '$lib/images/pen.svg';
-  import trashIcon from '$lib/images/trash.svg';
+  import NoteIcon from '$lib/ui/Icons/NoteIcon.svelte';
+  import TextIcon from '$lib/ui/Icons/TextIcon.svelte';
+  import AreaIcon from '$lib/ui/Icons/AreaIcon.svelte';
+  import PanIcon from '$lib/ui/Icons/PanIcon.svelte';
+  import SelectIcon from '$lib/ui/Icons/SelectIcon.svelte';
+  import ConnectIcon from '$lib/ui/Icons/ConnectIcon.svelte';
+  import PenIcon from '$lib/ui/Icons/PenIcon.svelte';
+  import TrashIcon from '$lib/ui/Icons/TrashIcon.svelte';
 
-  import Icon from '$lib/ui/Icon.svelte';
   import { toolbarModel } from '.';
 
   const { canvasStore } = getContext<Context>(CONTEXT_KEY);
@@ -24,49 +23,49 @@
     {
       label: 'Note',
       type: Tools.NOTE,
-      icon: noteIcon,
+      icon: NoteIcon,
       hoverText: 'Drag to add new text note',
     },
     {
       label: 'Area',
       type: Tools.AREA,
-      icon: areaIcon,
+      icon: AreaIcon,
       hoverText: 'Drag to add new area for organizing items',
     },
     {
       label: 'Text',
       type: Tools.TEXT,
-      icon: textIcon,
+      icon: TextIcon,
       hoverText: 'Drag to add new text area',
     },
     {
       label: 'Select',
       type: Tools.SELECT,
-      icon: selectIcon,
+      icon: SelectIcon,
       hoverText: 'Select tool',
     },
     {
       label: 'Pan',
       type: Tools.PAN,
-      icon: panIcon,
+      icon: PanIcon,
       hoverText: 'Pan tool',
     },
     {
       label: 'Pen',
       type: Tools.PEN,
-      icon: penIcon,
+      icon: PenIcon,
       hoverText: 'Pen tool',
     },
     {
       label: 'Connect',
       type: Tools.CONNECT,
-      icon: connectIcon,
+      icon: ConnectIcon,
       hoverText: 'Connect tool',
     },
     {
       label: 'Delete',
       type: Tools.DELETE,
-      icon: trashIcon,
+      icon: TrashIcon,
       hoverText: 'Delete selected item(s)',
       disabled: $selectedShapes.size === 0,
     },
@@ -94,7 +93,7 @@
           class:disabled={options?.disabled}
           title={hoverText}
         >
-          <Icon src={icon} alt={label} />
+          <svelte:component this={icon} />
         </span>
         <span class="text">{label}</span>
       </span>

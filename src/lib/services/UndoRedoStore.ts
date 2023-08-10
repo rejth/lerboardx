@@ -5,9 +5,9 @@ type Canvas = Map<string, ShapeConfig>;
 
 export class UndoRedoStore {
   history: Writable<Canvas[]> = writable([]);
+  undone: Writable<Canvas[]> = writable([]);
 
   #canvasState: Canvas[] = [];
-  #removedActions: Canvas[] = [];
 
   pushToHistory(data: Canvas): void {
     this.#canvasState.push(data);
@@ -16,13 +16,17 @@ export class UndoRedoStore {
 
   clearHistory(): void {
     this.#canvasState = [];
-    this.#removedActions = [];
+    this.undone.set([]);
     this.history.set([]);
   }
 
   undo(): Canvas {
+    const undone = get(this.undone);
+
     if (this.#canvasState.length > 0) {
-      this.#removedActions.push(this.#canvasState.pop()!);
+      const last = this.#canvasState.pop();
+      undone.push(last!);
+      this.undone.set(undone);
     }
 
     this.history.set(this.#canvasState);
@@ -33,11 +37,15 @@ export class UndoRedoStore {
   }
 
   redo(): Canvas {
-    if (this.#removedActions.length > 0) {
-      this.#canvasState.push(this.#removedActions.pop()!);
+    const undone = get(this.undone);
+
+    if (undone.length > 0) {
+      const last = undone.pop();
+      this.#canvasState.push(last!);
     }
 
     this.history.set(this.#canvasState);
+    this.undone.set(undone);
     if (!this.#canvasState.length) return new Map();
 
     const lastIndex = this.#canvasState.length - 1;

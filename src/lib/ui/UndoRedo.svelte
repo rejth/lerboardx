@@ -4,11 +4,16 @@
   import type { Context } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import undoIcon from '$lib/images/undo.svg';
-  import redoIcon from '$lib/images/redo.svg';
-  import Icon from '$lib/ui/Icon.svelte';
+  import UndoIcon from '$lib/ui/Icons/UndoIcon.svelte';
+  import RedoIcon from '$lib/ui/Icons/RedoIcon.svelte';
 
   const { socket, undoRedoStore } = getContext<Context>(CONTEXT_KEY);
+  const { history, undone } = undoRedoStore;
+
+  $: undoDisabled = !$history.length;
+  $: redoDisabled = !$undone.length;
+  $: undoColor = undoDisabled ? '#d3d3d3' : '#00263A';
+  $: redoColor = redoDisabled ? '#d3d3d3' : '#00263A';
 
   const undo = () => {
     const lastCanvasState = undoRedoStore.undo();
@@ -23,11 +28,25 @@
 
 <div class="undo-redo-toolbar">
   <div class="undo-redo">
-    <span class="icon" class:active={true} class:disabled={false} title={'Undo'}>
-      <Icon src={undoIcon} alt={'Undo'} on:click={undo} />
+    <span
+      tabindex="0"
+      role="button"
+      class="icon"
+      class:disabled={undoDisabled}
+      on:click={undo}
+      on:keydown={undo}
+    >
+      <UndoIcon color={undoColor} />
     </span>
-    <span class="icon" class:active={true} class:disabled={false} title={'Redo'}>
-      <Icon src={redoIcon} alt={'Redo'} on:click={redo} />
+    <span
+      tabindex="0"
+      role="button"
+      class="icon"
+      class:disabled={redoDisabled}
+      on:click={redo}
+      on:keydown={redo}
+    >
+      <RedoIcon color={redoColor} />
     </span>
   </div>
 </div>
@@ -63,7 +82,6 @@
   }
 
   .disabled {
-    color: #d3d3d3;
     pointer-events: none;
   }
 </style>
