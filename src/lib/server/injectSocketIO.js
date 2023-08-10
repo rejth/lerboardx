@@ -8,6 +8,7 @@ export function injectSocketIO(server) {
 
   const rooms = new Map();
 
+  // https://socket.io/docs/v3/emit-cheatsheet/
   io.on('connection', (socket) => {
     console.log(`Hello, World 👋! Socket ${socket.id} connected!`);
 
@@ -37,7 +38,7 @@ export function injectSocketIO(server) {
       }
 
       socket.join(roomId);
-      socket.broadcast.to(roomId).emit('user-joined', socket.id);
+      socket.to(roomId).emit('user-joined', socket.id);
     });
 
     // Leave a room
@@ -45,7 +46,7 @@ export function injectSocketIO(server) {
       const roomId = getRoomId();
 
       leaveRoom(roomId, socket.id);
-      io.to(roomId).emit('user-disconnected', socket.id);
+      socket.to(roomId).emit('user-disconnected', socket.id);
     });
 
     // Create a new shape/figure
@@ -54,7 +55,7 @@ export function injectSocketIO(server) {
       const room = rooms.get(roomId);
 
       room.board.set(shape.uuid, shape);
-      socket.broadcast.to(roomId).emit('order:add', shape);
+      socket.to(roomId).emit('order:add', shape);
     });
 
     // Delete a shape/figure
@@ -63,7 +64,7 @@ export function injectSocketIO(server) {
       const room = rooms.get(roomId);
 
       rooms.set(roomId, { ...room, board: new Map(shapesLeft) });
-      socket.broadcast.to(roomId).emit('order:delete', shapesLeft);
+      socket.to(roomId).emit('order:delete', shapesLeft);
     });
 
     // Change a shape/figure position, size, color, text, etc.
@@ -72,19 +73,26 @@ export function injectSocketIO(server) {
       const room = rooms.get(roomId);
 
       room.board.set(shape.uuid, shape);
-      socket.broadcast.to(roomId).emit('order:change', shape);
+      socket.to(roomId).emit('order:change', shape);
     });
 
     // Undo action
-    socket.on('order:undo', () => {
+    socket.on('order:undo', (canvas) => {
+      console.log(canvas);
       const roomId = getRoomId();
-      socket.broadcast.to(roomId).emit('user-undo', socket.id);
+      const room = rooms.get(roomId);
+
+      rooms.set(roomId, { ...room, board: new Map(canvas) });
+      io.in(roomId).emit('board', canvas);
     });
 
     // Redo action
-    socket.on('order:redo', () => {
+    socket.on('order:redo', (canvas) => {
       const roomId = getRoomId();
-      socket.broadcast.to(roomId).emit('user-redo', socket.id);
+      const room = rooms.get(roomId);
+
+      rooms.set(roomId, { ...room, board: new Map(canvas) });
+      io.in(roomId).emit('board', canvas);
     });
 
     socket.on('disconnecting', () => {

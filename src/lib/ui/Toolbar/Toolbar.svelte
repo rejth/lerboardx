@@ -81,14 +81,20 @@
 <ul class="toolbar" id="toolbar">
   {#each tools as { label, type, icon, hoverText, ...options }}
     <li>
-      <span class="tool">
+      <span
+        tabindex="0"
+        role="button"
+        class="tool"
+        on:click={() => onClick(type)}
+        on:keydown={() => onClick(type)}
+      >
         <span
           class="icon"
           class:active={$tool === type}
           class:disabled={options?.disabled}
           title={hoverText}
         >
-          <Icon src={icon} alt={label} on:click={() => onClick(type)} />
+          <Icon src={icon} alt={label} />
         </span>
         <span class="text">{label}</span>
       </span>

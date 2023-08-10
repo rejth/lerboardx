@@ -1,9 +1,11 @@
 import type { Socket } from 'socket.io-client';
 import type { CanvasModel } from '$lib/ui/Canvas';
+import type { UndoRedoStore } from '$lib/services';
 
 export type Context = {
   socket: Socket<any, any>;
   canvasStore: CanvasModel;
+  undoRedoStore: UndoRedoStore;
 };
 
 export type RoomLoadData = {

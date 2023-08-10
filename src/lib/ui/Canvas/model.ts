@@ -10,7 +10,7 @@ import {
   type Tool,
 } from '$lib/types';
 import { dimensions } from '$lib/constants';
-import { GeometryManager } from '$lib/services';
+import { GeometryManager, UndoRedoStore } from '$lib/services';
 
 import { toolbarModel, isDrawingToolSelected } from '$lib/ui/Toolbar';
 
@@ -21,13 +21,15 @@ export class CanvasModel {
   mousePosition: Writable<Point> = writable({ x: 0, y: 0 });
 
   #geometryManager: GeometryManager;
+  #undoRedoStore: UndoRedoStore;
   #socket: Context['socket'];
   shapeType: ShapeType | null = null;
   tool: Tool = Tools.PAN;
 
-  constructor(socket: Context['socket']) {
+  constructor(socket: Context['socket'], undoRedoStore: UndoRedoStore) {
     this.#geometryManager = new GeometryManager();
     this.#socket = socket;
+    this.#undoRedoStore = undoRedoStore;
 
     this.#socket.on('order:add', (payload: ShapeConfig) => {
       this.shapes.update((shapes) => shapes.set(payload.uuid, payload));
@@ -111,6 +113,9 @@ export class CanvasModel {
     toolbarModel.tool.set(Tools.PAN);
     toolbarModel.shapeType.set(null);
 
+    const deepCopy = structuredClone(get(this.shapes));
+    this.#undoRedoStore.pushToHistory(deepCopy);
+
     this.#socket.emit('order:add', shape);
   }
 
@@ -129,6 +134,9 @@ export class CanvasModel {
     const selected = get(this.selectedShapes);
     this.selectedShapes.update((shapes) => this.#removeSelected(shapes, selected));
     this.shapes.update((shapes) => this.#removeSelected(shapes, selected));
+
+    const deepCopy = structuredClone(get(this.shapes));
+    this.#undoRedoStore.pushToHistory(deepCopy);
 
     this.#socket.emit('order:delete', Array.from(get(this.shapes)));
   }

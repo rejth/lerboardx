@@ -2,20 +2,24 @@
   import { onMount, setContext, onDestroy } from 'svelte';
   import { io } from 'socket.io-client';
 
-  import type { RoomLoadData, ShapeConfig } from '$lib/types';
+  import type { Context, RoomLoadData, ShapeConfig } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
+  import { UndoRedoStore } from '$lib/services';
 
   import { Toolbar } from '$lib/ui/Toolbar';
   import { Canvas, CanvasModel } from '$lib/ui/Canvas';
+  import UndoRedo from '$lib/ui/UndoRedo.svelte';
 
   export let data: RoomLoadData;
 
   const socket = io();
-  const canvasStore = new CanvasModel(socket);
+  const undoRedoStore = new UndoRedoStore();
+  const canvasStore = new CanvasModel(socket, undoRedoStore);
 
-  setContext(CONTEXT_KEY, {
+  setContext<Context>(CONTEXT_KEY, {
     socket,
     canvasStore,
+    undoRedoStore,
   });
 
   onDestroy(() => {
@@ -24,7 +28,6 @@
 
   onMount(() => {
     socket.emit('order:join-room', data.roomId);
-
     socket.on('board', (board: Array<[string, ShapeConfig]>) => {
       canvasStore.setCanvas(new Map(board));
     });
@@ -43,6 +46,7 @@
     </div>
     <div class="tools-wrapper">
       <Toolbar />
+      <UndoRedo />
     </div>
   </div>
 </div>
