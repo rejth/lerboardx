@@ -2,7 +2,7 @@
   import { getContext, onMount } from 'svelte';
 
   import type { Context, ShapeConfig } from '$lib/types';
-  import { clickOutside, dndWatcher } from '$lib/utils';
+  import { clickOutside, dndWatcher, throttle } from '$lib/utils';
   import { CONTEXT_KEY } from '$lib/constants';
 
   import { Selection } from './';
@@ -32,8 +32,12 @@
 
   onMount(async () => {
     const dnd = dndWatcher(shapeRef);
+    const emitMove = (shape: ShapeConfig) => socket.emit('order:change', shape);
+    const throttleMove = throttle(emitMove, 20);
+
     for await (const e of dnd) {
-      shapeModel.move(e as MouseEvent, shapeRef.getBoundingClientRect());
+      const newPosition = shapeModel.move(e as MouseEvent, shapeRef.getBoundingClientRect());
+      throttleMove(newPosition);
     }
   });
 

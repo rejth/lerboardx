@@ -1,11 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, getContext } from 'svelte';
 
-  import { resizeWatcher } from '$lib/utils';
+  import type { Context, ShapeConfig } from '$lib/types';
+  import { resizeWatcher, throttle } from '$lib/utils';
+  import { CONTEXT_KEY } from '$lib/constants';
+
   import type { ShapeModel } from '../model';
 
   export let model: ShapeModel;
   export let styles: string;
+
+  const { socket } = getContext<Context>(CONTEXT_KEY);
 
   let selectionRef: HTMLSpanElement;
   let cornerRef: HTMLSpanElement;
@@ -13,8 +18,12 @@
 
   onMount(async () => {
     const resize = resizeWatcher(cornerRef);
+    const emitResize = (shape: ShapeConfig) => socket.emit('order:change', shape);
+    const throttleResize = throttle(emitResize, 20);
+
     for await (const e of resize) {
-      model.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
+      const newSize = model.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
+      throttleResize(newSize);
     }
   });
 </script>

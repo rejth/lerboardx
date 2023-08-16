@@ -78,7 +78,6 @@ export function injectSocketIO(server) {
 
     // Undo action
     socket.on('order:undo', (canvas) => {
-      console.log(canvas);
       const roomId = getRoomId();
       const room = rooms.get(roomId);
 

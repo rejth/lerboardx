@@ -46,19 +46,19 @@ export class ShapeModel {
     this.select(overlapped);
   }
 
-  move(e: MouseEvent, rect: DOMRect): void {
+  move(e: MouseEvent, rect: DOMRect): ShapeConfig {
     this.shape.update((shape) => {
       const { x, y } = shape;
       const position = this.#geometryManager.move(e, { x, y });
       return { ...shape, ...position, rect };
     });
-    this.#socket.emit('order:change', get(this.shape));
+    return get(this.shape);
   }
 
-  resize(e: MouseEvent, rect: DOMRect): void {
+  resize(e: MouseEvent, rect: DOMRect): ShapeConfig {
     const dimension = this.#geometryManager.resize(e, rect);
     this.shape.update((shape) => ({ ...shape, ...dimension, rect }));
-    this.#socket.emit('order:change', get(this.shape));
+    return get(this.shape);
   }
 
   select(selected: boolean): void {
