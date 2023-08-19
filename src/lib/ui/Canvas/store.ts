@@ -10,11 +10,12 @@ import {
   type Tool,
 } from '$lib/types';
 import { dimensions } from '$lib/constants';
-import { GeometryManager, UndoRedoStore } from '$lib/services';
+import { GeometryManager } from '$lib/services';
 
-import { toolbarModel, isDrawingToolSelected } from '$lib/ui/Toolbar';
+import { toolbarStore, isDrawingToolSelected } from '$lib/ui/Toolbar';
+import type { UndoRedoStore } from '../UndoRedo/store';
 
-export class CanvasModel {
+export class CanvasStore {
   shapes: Writable<Map<string, ShapeConfig>> = writable(new Map());
   selectedShapes: Writable<Map<string, ShapeConfig>> = writable(new Map());
   selection: Writable<Point[]> = writable([]);
@@ -39,10 +40,10 @@ export class CanvasModel {
       this.selectedShapes.set(new Map(payload));
     });
 
-    toolbarModel.shapeType.subscribe((value) => {
+    toolbarStore.shapeType.subscribe((value) => {
       this.shapeType = value;
     });
-    toolbarModel.tool.subscribe((value) => {
+    toolbarStore.tool.subscribe((value) => {
       this.tool = value;
     });
   }
@@ -110,8 +111,8 @@ export class CanvasModel {
     this.selectShape(shape);
 
     this.shapes.update((shapes) => shapes.set(shape.uuid, shape));
-    toolbarModel.tool.set(Tools.PAN);
-    toolbarModel.shapeType.set(null);
+    toolbarStore.tool.set(Tools.PAN);
+    toolbarStore.shapeType.set(null);
 
     const state = structuredClone(get(this.shapes));
     this.#undoRedoStore.pushToHistory(state);

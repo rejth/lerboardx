@@ -3,7 +3,7 @@ import { type Writable, writable } from 'svelte/store';
 import type { DrawingTool, ShapeType, Tool } from '$lib/types';
 import { isDrawingToolSelected, isShapeToolSelected } from './lib';
 
-class ToolbarModel {
+class ToolbarStore {
   tool: Writable<Tool> = writable('PAN');
   shapeType: Writable<ShapeType | null> = writable(null);
   drawingTool: Writable<DrawingTool | null> = writable(null);
@@ -31,4 +31,4 @@ class ToolbarModel {
   }
 }
 
-export const toolbarModel = new ToolbarModel();
+export const toolbarStore = new ToolbarStore();

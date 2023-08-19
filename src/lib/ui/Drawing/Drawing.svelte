@@ -1,13 +1,13 @@
 <script lang="ts">
   import { Figure, ConnectionNode } from '$lib/ui/Figure';
-  import { drawingModel } from './model';
+  import { drawingStore } from './store';
 
-  const { figures, connections, mouse } = drawingModel;
+  const { figures, connections, mouse } = drawingStore;
   let svgRef: SVGSVGElement;
 
-  const onMouseDown = (e: MouseEvent) => drawingModel.startPath(e, svgRef.getBoundingClientRect());
-  const onMouseMove = (e: MouseEvent) => drawingModel.movePath(e, svgRef.getBoundingClientRect());
-  const onMouseUp = () => drawingModel.endPath();
+  const onMouseDown = (e: MouseEvent) => drawingStore.startPath(e, svgRef.getBoundingClientRect());
+  const onMouseMove = (e: MouseEvent) => drawingStore.movePath(e, svgRef.getBoundingClientRect());
+  const onMouseUp = () => drawingStore.endPath();
 </script>
 
 <svelte:document on:mousedown={onMouseDown} on:mousemove={onMouseMove} on:mouseup={onMouseUp} />

@@ -4,17 +4,16 @@
 
   import type { Context, RoomLoadData, ShapeConfig } from '$lib/types';
   import { CONTEXT_KEY } from '$lib/constants';
-  import { UndoRedoStore } from '$lib/services';
 
   import { Toolbar } from '$lib/ui/Toolbar';
-  import { Canvas, CanvasModel } from '$lib/ui/Canvas';
-  import UndoRedo from '$lib/ui/UndoRedo.svelte';
+  import { Canvas, CanvasStore } from '$lib/ui/Canvas';
+  import { UndoRedo, UndoRedoStore } from '$lib/ui/UndoRedo';
 
   export let data: RoomLoadData;
 
   const socket = io();
   const undoRedoStore = new UndoRedoStore();
-  const canvasStore = new CanvasModel(socket, undoRedoStore);
+  const canvasStore = new CanvasStore(socket, undoRedoStore);
 
   setContext<Context>(CONTEXT_KEY, {
     socket,

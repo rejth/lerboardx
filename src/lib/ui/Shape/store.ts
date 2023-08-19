@@ -3,7 +3,7 @@ import { type Writable, writable, get } from 'svelte/store';
 import type { Context, Point, ShapeConfig } from '$lib/types';
 import { GeometryManager } from '$lib/services';
 
-export class ShapeModel {
+export class ShapeStore {
   shape: Writable<ShapeConfig> = writable();
 
   #geometryManager: GeometryManager;

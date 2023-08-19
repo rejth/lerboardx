@@ -10,7 +10,7 @@ import {
 } from '$lib/types';
 import { GeometryManager } from '$lib/services';
 
-import { toolbarModel } from '$lib/ui/Toolbar';
+import { toolbarStore } from '$lib/ui/Toolbar';
 
 export type Mouse = {
   type: DrawingTool | null;
@@ -37,7 +37,7 @@ export enum Connections {
 
 export type ConnectionType = keyof typeof Connections;
 
-class DrawingModel {
+class DrawingStore {
   figures: Writable<Set<FigureConfig>> = writable(new Set());
   connections: Writable<ConnectionNode[]> = writable([]);
   mouse: Writable<Mouse | null> = writable(null);
@@ -48,7 +48,7 @@ class DrawingModel {
 
   constructor() {
     this.#geometryManager = new GeometryManager();
-    toolbarModel.drawingTool.subscribe((value) => {
+    toolbarStore.drawingTool.subscribe((value) => {
       this.tool = value;
     });
   }
@@ -143,4 +143,4 @@ class DrawingModel {
   }
 }
 
-export const drawingModel = new DrawingModel();
+export const drawingStore = new DrawingStore();

@@ -13,11 +13,11 @@
   import PenIcon from '$lib/ui/Icons/PenIcon.svelte';
   import TrashIcon from '$lib/ui/Icons/TrashIcon.svelte';
 
-  import { toolbarModel } from '.';
+  import { toolbarStore } from '.';
 
   const { canvasStore } = getContext<Context>(CONTEXT_KEY);
   const { selectedShapes } = canvasStore;
-  const { tool } = toolbarModel;
+  const { tool } = toolbarStore;
 
   $: tools = [
     {
@@ -73,7 +73,7 @@
 
   const onClick = (type: Tool) => {
     if (type === Tools.DELETE) return canvasStore.deleteShape();
-    toolbarModel.changeTool(type);
+    toolbarStore.changeTool(type);
   };
 </script>
 

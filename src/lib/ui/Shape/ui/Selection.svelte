@@ -5,14 +5,14 @@
   import { mouseWatcherOnTarget, resizeWatcher, throttle } from '$lib/utils';
   import { CONTEXT_KEY } from '$lib/constants';
 
-  import type { ShapeModel } from '../model';
+  import type { ShapeStore } from '../store';
 
-  export let model: ShapeModel;
+  export let store: ShapeStore;
   export let styles: string;
 
   const { socket, canvasStore, undoRedoStore } = getContext<Context>(CONTEXT_KEY);
   const { shapes } = canvasStore;
-  const { shape } = model;
+  const { shape } = store;
 
   let selectionRef: HTMLSpanElement;
   let cornerRef: HTMLSpanElement;
@@ -27,7 +27,7 @@
 
     const watchResizing = async () => {
       for await (const e of resize) {
-        const newSize = model.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
+        const newSize = store.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
         throttleResizing(newSize);
       }
     };

@@ -6,17 +6,17 @@
   import { CONTEXT_KEY } from '$lib/constants';
 
   import { Selection } from './';
-  import { ShapeModel } from '../model';
+  import { ShapeStore } from '../store';
 
   export let settings: ShapeConfig;
   export let multiselect: boolean;
   export let clearSelected: boolean;
 
   const { socket, canvasStore, undoRedoStore } = getContext<Context>(CONTEXT_KEY);
-  const shapeModel = new ShapeModel(settings, socket, canvasStore, undoRedoStore);
+  const shapeStore = new ShapeStore(settings, socket, canvasStore, undoRedoStore);
 
   const { shapes, selection } = canvasStore;
-  const { shape } = shapeModel;
+  const { shape } = shapeStore;
 
   const deleteIcon = document.getElementById('toolbar');
   let shapeRef: HTMLDivElement;
@@ -27,7 +27,7 @@
     transform: translate(${$shape?.x}px, ${$shape?.y}px);
   `;
 
-  $: shapeModel.overlap($selection);
+  $: shapeStore.overlap($selection);
   $: clearSelected ? onClickOutside() : null;
 
   onMount(async () => {
@@ -39,7 +39,7 @@
 
     const watchDnd = async () => {
       for await (const e of dnd) {
-        const newPosition = shapeModel.move(e as MouseEvent, shapeRef.getBoundingClientRect());
+        const newPosition = shapeStore.move(e as MouseEvent, shapeRef.getBoundingClientRect());
         throttleMoving(newPosition);
       }
     };
@@ -56,12 +56,12 @@
 
   const onClickOutside = () => {
     if (multiselect) return;
-    shapeModel.select(false);
+    shapeStore.select(false);
     canvasStore.clearAllSelected();
   };
 
   const onSelect = () => {
-    shapeModel.select(true);
+    shapeStore.select(true);
     canvasStore.selectShape(settings);
   };
 </script>
@@ -78,7 +78,7 @@
     <slot />
   </div>
   {#if $shape?.selected}
-    <Selection {styles} model={shapeModel} />
+    <Selection {styles} store={shapeStore} />
   {/if}
 </div>
 
