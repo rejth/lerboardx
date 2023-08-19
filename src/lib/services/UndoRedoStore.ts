@@ -13,7 +13,6 @@ export class UndoRedoStore {
   pushToHistory(data: Canvas): void {
     this.#canvasState.push(data);
     this.history.set(this.#canvasState);
-    console.log(get(this.history));
   }
 
   clearHistory(): void {
@@ -39,8 +38,6 @@ export class UndoRedoStore {
     if (!this.#canvasState.length) return new Map();
 
     const lastIndex = this.#canvasState.length - 1;
-
-    console.log(get(this.history));
 
     this.setPerformed(true);
     return get(this.history)[lastIndex];
