@@ -2,7 +2,7 @@
   import { getContext, onMount } from 'svelte';
 
   import type { Context, ShapeConfig } from '$lib/types';
-  import { clickOutside, dndWatcher, throttle } from '$lib/utils';
+  import { clickOutside, dndWatcher, mouseWatcherOnTarget, throttle } from '$lib/utils';
   import { CONTEXT_KEY } from '$lib/constants';
 
   import { Selection } from './';
@@ -12,10 +12,10 @@
   export let multiselect: boolean;
   export let clearSelected: boolean;
 
-  const { socket, canvasStore } = getContext<Context>(CONTEXT_KEY);
-  const shapeModel = new ShapeModel(settings, socket, canvasStore);
+  const { socket, canvasStore, undoRedoStore } = getContext<Context>(CONTEXT_KEY);
+  const shapeModel = new ShapeModel(settings, socket, canvasStore, undoRedoStore);
 
-  const { selection } = canvasStore;
+  const { shapes, selection } = canvasStore;
   const { shape } = shapeModel;
 
   const deleteIcon = document.getElementById('toolbar');
@@ -31,14 +31,26 @@
   $: clearSelected ? onClickOutside() : null;
 
   onMount(async () => {
-    const dnd = dndWatcher(shapeRef);
-    const emitMove = (shape: ShapeConfig) => socket.emit('order:change', shape);
-    const throttleMove = throttle(emitMove, 20);
+    const emitMoving = (shape: ShapeConfig) => socket.emit('order:change', shape);
 
-    for await (const e of dnd) {
-      const newPosition = shapeModel.move(e as MouseEvent, shapeRef.getBoundingClientRect());
-      throttleMove(newPosition);
-    }
+    const dnd = dndWatcher(shapeRef);
+    const tracker = mouseWatcherOnTarget(shapeRef, 'mouseup');
+    const throttleMoving = throttle(emitMoving, 20);
+
+    const watchDnd = async () => {
+      for await (const e of dnd) {
+        const newPosition = shapeModel.move(e as MouseEvent, shapeRef.getBoundingClientRect());
+        throttleMoving(newPosition);
+      }
+    };
+    const watchMouseUp = async () => {
+      for await (const _e of tracker) {
+        const state = structuredClone($shapes);
+        undoRedoStore.pushToHistory(state.set($shape.uuid, $shape));
+      }
+    };
+
+    await Promise.all([watchDnd(), watchMouseUp()]);
   });
 
   const onClickOutside = () => {

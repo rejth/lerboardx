@@ -113,8 +113,8 @@ export class CanvasModel {
     toolbarModel.tool.set(Tools.PAN);
     toolbarModel.shapeType.set(null);
 
-    const deepCopy = structuredClone(get(this.shapes));
-    this.#undoRedoStore.pushToHistory(deepCopy);
+    const state = structuredClone(get(this.shapes));
+    this.#undoRedoStore.pushToHistory(state);
 
     this.#socket.emit('order:add', shape);
   }
@@ -135,8 +135,8 @@ export class CanvasModel {
     this.selectedShapes.update((shapes) => this.#removeSelected(shapes, selected));
     this.shapes.update((shapes) => this.#removeSelected(shapes, selected));
 
-    const deepCopy = structuredClone(get(this.shapes));
-    this.#undoRedoStore.pushToHistory(deepCopy);
+    const state = structuredClone(get(this.shapes));
+    this.#undoRedoStore.pushToHistory(state);
 
     this.#socket.emit('order:delete', Array.from(get(this.shapes)));
   }

@@ -9,9 +9,15 @@ export class ShapeModel {
   #geometryManager: GeometryManager;
   #canvasStore: Context['canvasStore'];
   #socket: Context['socket'];
+  #undoRedoPerformed = false;
   allSelected: Map<string, ShapeConfig> = new Map();
 
-  constructor(config: ShapeConfig, socket: Context['socket'], canvasStore: Context['canvasStore']) {
+  constructor(
+    config: ShapeConfig,
+    socket: Context['socket'],
+    canvasStore: Context['canvasStore'],
+    undoRedoStore: Context['undoRedoStore'],
+  ) {
     this.#geometryManager = new GeometryManager();
     this.#canvasStore = canvasStore;
     this.#socket = socket;
@@ -22,6 +28,14 @@ export class ShapeModel {
       this.shape.set(payload);
     });
 
+    undoRedoStore.performed.subscribe((value) => {
+      this.#undoRedoPerformed = value;
+    });
+    canvasStore.shapes.subscribe((value) => {
+      if (!this.#undoRedoPerformed) return;
+      this.shape.set(value.get(config.uuid)!);
+      undoRedoStore.setPerformed(false);
+    });
     canvasStore.selectedShapes.subscribe((value) => {
       this.allSelected = value;
     });

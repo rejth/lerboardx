@@ -2,7 +2,7 @@
   import { onMount, getContext } from 'svelte';
 
   import type { Context, ShapeConfig } from '$lib/types';
-  import { resizeWatcher, throttle } from '$lib/utils';
+  import { mouseWatcherOnTarget, resizeWatcher, throttle } from '$lib/utils';
   import { CONTEXT_KEY } from '$lib/constants';
 
   import type { ShapeModel } from '../model';
@@ -10,21 +10,35 @@
   export let model: ShapeModel;
   export let styles: string;
 
-  const { socket } = getContext<Context>(CONTEXT_KEY);
+  const { socket, canvasStore, undoRedoStore } = getContext<Context>(CONTEXT_KEY);
+  const { shapes } = canvasStore;
+  const { shape } = model;
 
   let selectionRef: HTMLSpanElement;
   let cornerRef: HTMLSpanElement;
   const cornerStyles = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 
   onMount(async () => {
-    const resize = resizeWatcher(cornerRef);
-    const emitResize = (shape: ShapeConfig) => socket.emit('order:change', shape);
-    const throttleResize = throttle(emitResize, 20);
+    const emitResizing = (shape: ShapeConfig) => socket.emit('order:change', shape);
 
-    for await (const e of resize) {
-      const newSize = model.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
-      throttleResize(newSize);
-    }
+    const resize = resizeWatcher(cornerRef);
+    const tracker = mouseWatcherOnTarget(cornerRef, 'mouseup');
+    const throttleResizing = throttle(emitResizing, 20);
+
+    const watchResizing = async () => {
+      for await (const e of resize) {
+        const newSize = model.resize(e as MouseEvent, selectionRef.getBoundingClientRect());
+        throttleResizing(newSize);
+      }
+    };
+    const watchMouseUp = async () => {
+      for await (const _e of tracker) {
+        const state = structuredClone($shapes);
+        undoRedoStore.pushToHistory(state.set($shape.uuid, $shape));
+      }
+    };
+
+    await Promise.all([watchResizing(), watchMouseUp()]);
   });
 </script>
 

@@ -1,16 +1,19 @@
 import { on, once, type Target } from './listeners';
-import { filter, any, every, sequence, watch } from './generators';
+import { filter, any, every, sequence, watch, onlyEvent } from './generators';
 
-const allEvents = () => true;
+export function mouseWatcherOnTarget<T, E extends keyof HTMLElementEventMap>(
+  target: Target,
+  event: E,
+): AsyncGenerator<T> {
+  const allEvents = () => true;
 
-export function mouseWatcher<T>(target: Target): AsyncGenerator<T> {
   return watch(() =>
     filter(
       sequence(
         once(target, 'mousedown'),
-        every(any(on(document, 'mousemove'), on(document, 'mouseup')), allEvents),
+        every(any(on(document, 'mousemove'), on(target, 'mouseup')), allEvents),
       ),
-      allEvents,
+      onlyEvent(event),
     ),
   );
 }
