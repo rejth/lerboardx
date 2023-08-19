@@ -45,8 +45,9 @@
     };
     const watchMouseUp = async () => {
       for await (const _e of tracker) {
-        const state = structuredClone($shapes);
-        undoRedoStore.pushToHistory(state.set($shape.uuid, $shape));
+        const state = structuredClone($shapes).set($shape.uuid, $shape);
+        canvasStore.setCanvas(state);
+        undoRedoStore.pushToHistory(state);
       }
     };
 
