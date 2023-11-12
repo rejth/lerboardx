@@ -70,10 +70,10 @@ npm run dev
 
 # or start the server and open the app in a new browser tab
 npm run dev -- --open
+```
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-```
 
 ## Building
 
@@ -82,7 +82,7 @@ To create a production version of the app:
 ```bash
 npm run build
 ```
-Your app is ready to be deployed!
+Your app is ready to be deployed!\
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
